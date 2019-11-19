@@ -25,24 +25,35 @@ public class Bear extends Critter {
 	public Action getMove(CritterInfo info) {
 		// increment moveCount
 		moveCount++;
-		
+
 		// always infect if an enemy is in front
-		if (info.frontThreat()) {
+		if (info.getFront() == Neighbor.OTHER) {
 			return Action.INFECT;
-		}
-		// or hop
-		else {
-			return Action.HOP;
 		}
 
 		// or turn left
 		// the logic doesn't see to prevent us from hopping, so we'll never turn left as
 		// far as I can tell
+		// changed to turned if it runs into another bear
+		else if (info.getFront() == Neighbor.SAME) {
+			return Action.RIGHT;
+		}
+		
+		// turn left if they are facing a wall
+		// added by dev, not in original spec
+		else if (info.getFront() == Neighbor.WALL) {
+			return Action.LEFT;
+		}
+
+		// or hop
+		else {
+			return Action.HOP;
+		}
 	}
 
 	public Color getColor() {
 		// Color options
-		if(isPolarBear) {
+		if (isPolarBear) {
 			return Color.WHITE;
 		}
 		return Color.BLACK;
@@ -51,9 +62,9 @@ public class Bear extends Critter {
 	public String toString() {
 		if (this.moveCount % 2 == 1) {
 			return "/";
-		}
+		} 
 		else {
 			return "\\";
 		}
-    }
+	}
 }
